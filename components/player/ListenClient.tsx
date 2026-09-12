@@ -17,7 +17,7 @@ export function ListenClient({ songId, title, youtubeId, durationSec, lines }: P
   const [lyricsMode, setLyricsMode] = useState(false);
 
   return (
-    <main className="bg-atmosphere flex h-dvh flex-col overflow-hidden">
+    <main className="bg-atmosphere flex h-[calc(100dvh-3.5rem)] flex-col overflow-hidden">
       <header className="flex shrink-0 items-center justify-between gap-3 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
         <div className="min-w-0">
           <Link

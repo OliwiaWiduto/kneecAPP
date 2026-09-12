@@ -77,9 +77,9 @@ export function YouTubeLyricPlayer({
           rel: 0,
           modestbranding: 1,
           playsinline: 1,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
+          controls: 1,
+          disablekb: 0,
+          fs: 1,
           iv_load_policy: 3,
           origin: window.location.origin,
         },
@@ -201,34 +201,39 @@ export function YouTubeLyricPlayer({
   const progress = duration > 0 ? Math.min(100, (clock / duration) * 100) : 0;
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      {/* Video — large on top in default mode; off-flow (still playing) in lyrics mode */}
+    <div className="relative flex min-h-0 flex-1 flex-col">
       <div
-        className={
-          lyricsMode
-            ? "pointer-events-none fixed left-0 top-0 h-px w-px overflow-hidden opacity-0"
-            : "relative aspect-video w-full shrink-0 border-b border-white/10 bg-black"
-        }
+        className={`flex min-h-0 flex-1 flex-col ${lyricsMode ? "pb-[8.75rem]" : "md:flex-row"}`}
       >
-        <div id={containerId} className="absolute inset-0 h-full w-full" />
-        {!ready && !lyricsMode && (
-          <div className="absolute inset-0 flex items-center justify-center bg-ink-soft text-sm uppercase tracking-[0.2em] text-mute">
-            Loading track…
+        {/* Video — stacked on mobile; 50% left column on desktop (video mode only) */}
+        <div
+          className={
+            lyricsMode
+              ? "pointer-events-none fixed left-0 top-0 h-px w-px overflow-hidden opacity-0"
+              : "relative w-full shrink-0 border-b border-white/10 bg-black md:w-1/2 md:border-b-0 md:border-r"
+          }
+        >
+          <div className="relative aspect-video w-full md:sticky md:top-0 md:max-h-full">
+            <div id={containerId} className="absolute inset-0 h-full w-full" />
+            {!ready && !lyricsMode && (
+              <div className="absolute inset-0 flex items-center justify-center bg-ink-soft text-sm uppercase tracking-[0.2em] text-mute">
+                Loading track…
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
 
-      <div
-        data-lyric-scroller
-        className={`relative min-h-0 flex-1 overflow-y-auto scroll-auto px-5 [overflow-anchor:none] sm:px-8 ${
-          lyricsMode ? "pt-2" : "pt-4"
-        }`}
-      >
-        <ul
-          className={`mx-auto max-w-2xl space-y-5 pb-8 ${
-            lyricsMode ? "space-y-6 pb-10 pt-[16vh]" : "pt-2"
+        <div
+          data-lyric-scroller
+          className={`relative min-h-0 flex-1 overflow-y-auto scroll-auto px-5 [overflow-anchor:none] sm:px-8 md:min-w-0 ${
+            lyricsMode ? "pt-2" : "pt-4 md:w-1/2 md:pt-6"
           }`}
         >
+          <ul
+            className={`mx-auto max-w-2xl space-y-5 pb-4 ${
+              lyricsMode ? "space-y-6 pb-6 pt-[16vh] md:max-w-3xl" : "pt-2 md:max-w-none"
+            }`}
+          >
           {lines.map((line, index) => {
             const isActive = index === activeIndex;
             const isPast = index < activeIndex;
@@ -275,102 +280,103 @@ export function YouTubeLyricPlayer({
               </li>
             );
           })}
-        </ul>
+          </ul>
+        </div>
       </div>
 
-      <div className="shrink-0 border-t border-white/10 bg-ink/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md">
-        <div className="mb-3 flex items-center gap-3">
-          <span className="w-10 shrink-0 font-mono text-[10px] tabular-nums text-mute">
-            {formatClock(clock)}
-          </span>
-          <input
-            type="range"
-            min={0}
-            max={Math.max(1, duration)}
-            step={0.1}
-            value={Math.min(clock, duration || clock)}
-            disabled={!ready}
-            onChange={(e) => onScrub(Number(e.target.value))}
-            onPointerUp={(e) => onScrubEnd(Number((e.target as HTMLInputElement).value))}
-            onTouchEnd={(e) => onScrubEnd(Number((e.target as HTMLInputElement).value))}
-            className="h-1.5 w-full cursor-pointer appearance-none rounded-none disabled:opacity-40 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-kneecap-red [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-kneecap-red"
-            style={{
-              background: `linear-gradient(to right, #e10600 ${progress}%, rgba(255,255,255,0.15) ${progress}%)`,
-            }}
-            aria-label="Seek"
-          />
-          <span className="w-10 shrink-0 text-right font-mono text-[10px] tabular-nums text-mute">
-            {formatClock(duration)}
-          </span>
-        </div>
+      {lyricsMode ? (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-ink/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md">
+          <div className="mb-3 flex items-center gap-3">
+            <span className="w-10 shrink-0 font-mono text-[10px] tabular-nums text-mute">
+              {formatClock(clock)}
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={Math.max(1, duration)}
+              step={0.1}
+              value={Math.min(clock, duration || clock)}
+              disabled={!ready}
+              onChange={(e) => onScrub(Number(e.target.value))}
+              onPointerUp={(e) => onScrubEnd(Number((e.target as HTMLInputElement).value))}
+              onTouchEnd={(e) => onScrubEnd(Number((e.target as HTMLInputElement).value))}
+              className="h-1.5 w-full cursor-pointer appearance-none rounded-none disabled:opacity-40 [&::-webkit-slider-thumb]:h-3.5 [&::-webkit-slider-thumb]:w-3.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-kneecap-red [&::-moz-range-thumb]:h-3.5 [&::-moz-range-thumb]:w-3.5 [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-kneecap-red"
+              style={{
+                background: `linear-gradient(to right, #e10600 ${progress}%, rgba(255,255,255,0.15) ${progress}%)`,
+              }}
+              aria-label="Seek"
+            />
+            <span className="w-10 shrink-0 text-right font-mono text-[10px] tabular-nums text-mute">
+              {formatClock(duration)}
+            </span>
+          </div>
 
-        <div className="flex items-center gap-3">
-          {lyricsMode ? (
-            // eslint-disable-next-line @next/next/no-img-element
+          <div className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={youtubeThumb(youtubeId, "mq")}
               alt=""
               className="h-14 w-14 shrink-0 border border-white/20 object-cover"
             />
-          ) : null}
 
-          <div className="min-w-0 flex-1">
-            <p className="truncate font-display text-sm uppercase leading-none text-bone">{title}</p>
-            <p className="mt-1 truncate text-xs text-mute">KNEECAP</p>
-          </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-display text-sm uppercase leading-none text-bone">{title}</p>
+              <p className="mt-1 truncate text-xs text-mute">KNEECAP</p>
+            </div>
 
-          <div className="flex shrink-0 items-center gap-1">
-            <button
-              type="button"
-              onClick={() => nudge(-10)}
-              disabled={!ready}
-              className="flex h-10 w-10 items-center justify-center font-mono text-xs text-bone/80 hover:text-bone disabled:opacity-40"
-              aria-label="Back 10 seconds"
-            >
-              −10
-            </button>
-            <button
-              type="button"
-              onClick={togglePlay}
-              disabled={!ready}
-              className="flex h-12 w-12 items-center justify-center border border-bone bg-bone text-ink transition active:scale-95 hover:border-fluoro hover:bg-fluoro disabled:opacity-40"
-              aria-label={playing ? "Pause" : "Play"}
-            >
-              {playing ? (
-                <span className="flex gap-1" aria-hidden>
-                  <span className="h-4 w-1 bg-current" />
-                  <span className="h-4 w-1 bg-current" />
-                </span>
-              ) : (
-                <span
-                  className="ml-0.5 block h-0 w-0 border-y-[7px] border-l-[12px] border-y-transparent border-l-current"
-                  aria-hidden
-                />
-              )}
-            </button>
-            <button
-              type="button"
-              onClick={() => nudge(10)}
-              disabled={!ready}
-              className="flex h-10 w-10 items-center justify-center font-mono text-xs text-bone/80 hover:text-bone disabled:opacity-40"
-              aria-label="Forward 10 seconds"
-            >
-              +10
-            </button>
-            <button
-              type="button"
-              onClick={toggleMute}
-              disabled={!ready}
-              className={`flex h-10 min-w-10 items-center justify-center px-1 font-mono text-[10px] uppercase tracking-wider disabled:opacity-40 ${
-                muted ? "text-kneecap-red-hot" : "text-mute hover:text-bone"
-              }`}
-              aria-label={muted ? "Unmute" : "Mute"}
-            >
-              {muted ? "Mute" : "Vol"}
-            </button>
+            <div className="flex shrink-0 items-center gap-1">
+              <button
+                type="button"
+                onClick={() => nudge(-10)}
+                disabled={!ready}
+                className="flex h-10 w-10 items-center justify-center font-mono text-xs text-bone/80 hover:text-bone disabled:opacity-40"
+                aria-label="Back 10 seconds"
+              >
+                −10
+              </button>
+              <button
+                type="button"
+                onClick={togglePlay}
+                disabled={!ready}
+                className="flex h-12 w-12 items-center justify-center border border-bone bg-bone text-ink transition active:scale-95 hover:border-fluoro hover:bg-fluoro disabled:opacity-40"
+                aria-label={playing ? "Pause" : "Play"}
+              >
+                {playing ? (
+                  <span className="flex gap-1" aria-hidden>
+                    <span className="h-4 w-1 bg-current" />
+                    <span className="h-4 w-1 bg-current" />
+                  </span>
+                ) : (
+                  <span
+                    className="ml-0.5 block h-0 w-0 border-y-[7px] border-l-[12px] border-y-transparent border-l-current"
+                    aria-hidden
+                  />
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() => nudge(10)}
+                disabled={!ready}
+                className="flex h-10 w-10 items-center justify-center font-mono text-xs text-bone/80 hover:text-bone disabled:opacity-40"
+                aria-label="Forward 10 seconds"
+              >
+                +10
+              </button>
+              <button
+                type="button"
+                onClick={toggleMute}
+                disabled={!ready}
+                className={`flex h-10 min-w-10 items-center justify-center px-1 font-mono text-[10px] uppercase tracking-wider disabled:opacity-40 ${
+                  muted ? "text-kneecap-red-hot" : "text-mute hover:text-bone"
+                }`}
+                aria-label={muted ? "Unmute" : "Mute"}
+              >
+                {muted ? "Mute" : "Vol"}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }
