@@ -3,19 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useProgress } from "@/components/auth/ProgressProvider";
-
 export function AuthBar() {
   const pathname = usePathname();
   const { configured, ready, user, streak, signOut } = useProgress();
   const onLogin = pathname === "/login";
 
   return (
-    <nav className="sticky top-0 z-40 flex items-center justify-between gap-3 border-b border-white/10 bg-ink/85 px-5 py-3 backdrop-blur-sm sm:px-8">
-      <Link
-        href="/"
-        className="font-display text-sm uppercase tracking-[0.18em] text-bone transition hover:text-kneecap-red"
-      >
-        kneec<span className="text-kneecap-red">APP</span>
+    <nav className="font-elite sticky top-0 z-40 flex items-center justify-between gap-3 border-b border-white/10 bg-ink/85 px-5 py-3 backdrop-blur-sm sm:px-8">
+      <Link href="/" className="flex shrink-0 items-center" aria-label="kneecapp home">
+        <img src="/kneecap-mark.png" alt="" width={32} height={32} className="h-8 w-8" />
       </Link>
       <div className="flex min-h-7 flex-wrap items-center justify-end gap-x-4 gap-y-1 text-xs uppercase tracking-[0.16em]">
         {!ready ? (

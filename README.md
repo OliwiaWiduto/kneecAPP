@@ -1,4 +1,4 @@
-# kneecAPP
+# Scoil Kneecap
 
 Learn Irish off Kneecap — YouTube lyric sync (English on top, Irish underneath) plus Duolingo-style 10-game lessons. Sign in with Supabase so XP and streak sit against your name.
 

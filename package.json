@@ -10,7 +10,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "align-lyrics": "PATH=\"${HOME}/.pyenv/versions/3.9.7/bin:/opt/homebrew/bin:$PATH\" PYTHONPATH=./.python-packages python3 scripts/align_lyrics.py"
+    "align-lyrics": "PATH=\"${HOME}/.pyenv/versions/3.9.7/bin:/opt/homebrew/bin:$PATH\" PYTHONPATH=./.python-packages python3 scripts/align_lyrics.py",
+    "build-irish-dictionary": "npx --yes tsx scripts/build-irish-dictionary.mjs",
+    "build-lyric-dictionary": "npm run build-irish-dictionary"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

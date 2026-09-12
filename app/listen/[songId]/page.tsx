@@ -22,6 +22,7 @@ export default async function ListenPage({ params }: Props) {
       youtubeId={song.youtubeId}
       durationSec={song.durationSec}
       lines={song.lines}
+      vocab={song.vocab}
     />
   );
 }

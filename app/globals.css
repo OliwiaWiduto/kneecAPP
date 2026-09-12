@@ -10,6 +10,7 @@
   --color-fluoro: #39ff14;
   --font-display: "Archivo Black", "Arial Black", sans-serif;
   --font-body: "Space Grotesk", system-ui, sans-serif;
+  --font-elite: "Special Elite", "Courier New", cursive;
 }
 
 @layer base {
@@ -35,6 +36,10 @@
   .font-display {
     font-family: var(--font-display);
     letter-spacing: 0.02em;
+  }
+
+  .font-elite {
+    font-family: var(--font-elite);
   }
 
   .grain {

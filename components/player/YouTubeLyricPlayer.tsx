@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import type { LyricLine } from "@/data/songs";
-import { pickActiveLineIndex, translationFor, youtubeThumb } from "@/lib/utils";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { LyricLine, VocabItem } from "@/data/songs";
+import { LyricsList } from "@/components/player/LyricsList";
+import { pickActiveLineIndex, youtubeThumb } from "@/lib/utils";
 import type { YTPlayer } from "@/types/youtube";
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
   title: string;
   durationSec: number;
   lines: LyricLine[];
+  vocab: VocabItem[];
   lyricsMode: boolean;
 };
 
@@ -50,6 +52,7 @@ export function YouTubeLyricPlayer({
   title,
   durationSec,
   lines,
+  vocab,
   lyricsMode,
 }: Props) {
   const playerRef = useRef<YTPlayer | null>(null);
@@ -147,7 +150,7 @@ export function YouTubeLyricPlayer({
     scroller.scrollTo({ top: Math.max(0, nextTop), behavior: "auto" });
   }, [activeIndex]);
 
-  function seekToLine(index: number) {
+  const seekToLine = useCallback((index: number) => {
     const line = lines[index];
     if (!line) return;
     playerRef.current?.seekTo(line.startSec, true);
@@ -155,7 +158,7 @@ export function YouTubeLyricPlayer({
     holdActiveUntilRef.current = performance.now() + 600;
     setActiveIndex(index);
     setClock(line.startSec);
-  }
+  }, [lines]);
 
   function togglePlay() {
     const player = playerRef.current;
@@ -229,58 +232,15 @@ export function YouTubeLyricPlayer({
             lyricsMode ? "pt-2" : "pt-4 md:w-1/2 md:pt-6"
           }`}
         >
-          <ul
-            className={`mx-auto max-w-2xl space-y-5 pb-4 ${
-              lyricsMode ? "space-y-6 pb-6 pt-[16vh] md:max-w-3xl" : "pt-2 md:max-w-none"
-            }`}
-          >
-          {lines.map((line, index) => {
-            const isActive = index === activeIndex;
-            const isPast = index < activeIndex;
-            const gloss = translationFor(line);
-            return (
-              <li key={`${line.ga}-${index}`}>
-                <button
-                  type="button"
-                  ref={(el) => {
-                    lineRefs.current[index] = el;
-                  }}
-                  onClick={() => seekToLine(index)}
-                  className={`block w-full text-left transition-all duration-200 ${
-                    isActive
-                      ? "lyric-active"
-                      : isPast
-                        ? "opacity-30"
-                        : "opacity-50 hover:opacity-90"
-                  }`}
-                >
-                  <span
-                    className={`block font-display leading-tight ${
-                      isActive
-                        ? lyricsMode
-                          ? "text-3xl text-kneecap-red-hot sm:text-4xl [text-shadow:0_0_28px_rgba(225,6,0,0.35)]"
-                          : "text-2xl text-kneecap-red-hot sm:text-3xl [text-shadow:0_0_24px_rgba(225,6,0,0.35)]"
-                        : lyricsMode
-                          ? "text-xl text-bone sm:text-2xl"
-                          : "text-lg text-bone sm:text-xl"
-                    }`}
-                  >
-                    {line.ga}
-                  </span>
-                  {gloss ? (
-                    <span
-                      className={`mt-1 block font-body text-sm leading-snug sm:text-[0.95rem] ${
-                        isActive ? "text-bone/70" : "text-mute"
-                      }`}
-                    >
-                      {gloss}
-                    </span>
-                  ) : null}
-                </button>
-              </li>
-            );
-          })}
-          </ul>
+          <LyricsList
+            lines={lines}
+            vocab={vocab}
+            activeIndex={activeIndex}
+            lyricsMode={lyricsMode}
+            canHover={!playing}
+            lineRefs={lineRefs}
+            onSeekLine={seekToLine}
+          />
         </div>
       </div>
 
@@ -321,18 +281,18 @@ export function YouTubeLyricPlayer({
 
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-sm uppercase leading-none text-bone">{title}</p>
-              <p className="mt-1 truncate text-xs text-mute">KNEECAP</p>
+              <p className="mt-1 truncate text-xs text-mute">Scoil Kneecap</p>
             </div>
 
             <div className="flex shrink-0 items-center gap-1">
               <button
                 type="button"
-                onClick={() => nudge(-10)}
+                onClick={() => nudge(-5)}
                 disabled={!ready}
                 className="flex h-10 w-10 items-center justify-center font-mono text-xs text-bone/80 hover:text-bone disabled:opacity-40"
-                aria-label="Back 10 seconds"
+                aria-label="Back 5 seconds"
               >
-                −10
+                −5
               </button>
               <button
                 type="button"
@@ -355,12 +315,12 @@ export function YouTubeLyricPlayer({
               </button>
               <button
                 type="button"
-                onClick={() => nudge(10)}
+                onClick={() => nudge(5)}
                 disabled={!ready}
                 className="flex h-10 w-10 items-center justify-center font-mono text-xs text-bone/80 hover:text-bone disabled:opacity-40"
-                aria-label="Forward 10 seconds"
+                aria-label="Forward 5 seconds"
               >
-                +10
+                +5
               </button>
               <button
                 type="button"

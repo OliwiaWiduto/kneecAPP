@@ -47,6 +47,47 @@ SONG_META = {
         "duration": 204,
     },
     "cearta": {"file": "cearta.ts", "youtube": "8Sf0htzbMKk", "duration": 250},
+    "fine-art": {
+        "file": "fine-art.ts",
+        "youtube": "-b9GQ_nm9pc",
+        "duration": 167,
+    },
+    "fenian": {"file": "fenian.ts", "youtube": "PLDHQVJZuGQ", "duration": 208},
+    "smugglers-and-scholars": {
+        "file": "smugglers-and-scholars.ts",
+        "youtube": "gHU5UJxRjxY",
+        "duration": 172,
+    },
+    "liars-tale": {
+        "file": "liars-tale.ts",
+        "youtube": "e061Py8MTHg",
+        "duration": 210,
+    },
+    "no-comment": {
+        "file": "no-comment.ts",
+        "youtube": "ss9fRdpYdyI",
+        "duration": 124,
+    },
+    "sick-in-the-head": {
+        "file": "sick-in-the-head.ts",
+        "youtube": "dDdnqCBPvFQ",
+        "duration": 159,
+    },
+    "its-been-ages": {
+        "file": "its-been-ages.ts",
+        "youtube": "B8-_ogy-eGE",
+        "duration": 152,
+    },
+    "thart-agus-thart": {
+        "file": "thart-agus-thart.ts",
+        "youtube": "bI4QhEh-jk4",
+        "duration": 146,
+    },
+    "amach-anocht": {
+        "file": "amach-anocht.ts",
+        "youtube": "L9TJMrKpe0k",
+        "duration": 252,
+    },
 }
 
 MIN_LINE_SEC = 0.85

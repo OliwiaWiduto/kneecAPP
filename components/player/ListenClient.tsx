@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { YouTubeLyricPlayer } from "@/components/player/YouTubeLyricPlayer";
-import type { LyricLine } from "@/data/songs";
+import type { LyricLine, VocabItem } from "@/data/songs";
 
 type Props = {
   songId: string;
@@ -11,9 +11,10 @@ type Props = {
   youtubeId: string;
   durationSec: number;
   lines: LyricLine[];
+  vocab: VocabItem[];
 };
 
-export function ListenClient({ songId, title, youtubeId, durationSec, lines }: Props) {
+export function ListenClient({ songId, title, youtubeId, durationSec, lines, vocab }: Props) {
   const [lyricsMode, setLyricsMode] = useState(false);
 
   return (
@@ -24,7 +25,7 @@ export function ListenClient({ songId, title, youtubeId, durationSec, lines }: P
             href="/"
             className="text-[10px] uppercase tracking-[0.25em] text-mute transition hover:text-kneecap-red"
           >
-            ← kneecAPP
+            ← Scoil Kneecap
           </Link>
           <h1 className="mt-1 truncate font-display text-xl uppercase leading-none text-bone sm:text-2xl">
             {title}
@@ -56,6 +57,7 @@ export function ListenClient({ songId, title, youtubeId, durationSec, lines }: P
         title={title}
         durationSec={durationSec}
         lines={lines}
+        vocab={vocab}
         lyricsMode={lyricsMode}
       />
     </main>

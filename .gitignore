@@ -16,6 +16,7 @@
 /.next-run/
 /out/
 /tmp/
+/.cache/
 /.python-packages/
 /.venv/
 
@@ -39,3 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 __pycache__/
+.vercel
+.env*

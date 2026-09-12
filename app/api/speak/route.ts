@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   const abair = await fetch(url, {
     headers: {
       Accept: "application/json",
-      "User-Agent": "kneecAPP/0.1 (Irish learning)",
+      "User-Agent": "Scoil-Kneecap/0.1 (Irish learning)",
     },
     cache: "force-cache",
   });
