@@ -1,0 +1,1 @@
+-- Profiles are created automatically when a user signs up.
