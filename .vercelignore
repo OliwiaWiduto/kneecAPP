@@ -1,0 +1,8 @@
+node_modules
+.next-run
+.next
+.git
+.python-packages
+.venv
+__pycache__
+*.pyc
